@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gringa Imports - Perfumes Importados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rose-gold: #B76E79;
+      --rose-gold-light: #D4A0A7;
+      --rose-gold-dark: #8E4A52;
+      --crown-gold: #C9A96E;
+      --white: #FFFFFF;
+      --off-white: #FAF8F6;
+      --light-gray: #F5F3F1;
+      --medium-gray: #E8E4E1;
+      --text-dark: #2C2424;
+      --text-medium: #5C5252;
+      --text-light: #8A7E7E;
+      --success: #4CAF50;
+      --danger: #E53935;
+      --shadow-sm: 0 2px 8px rgba(44, 36, 36, 0.06);
+      --shadow-md: 0 4px 16px rgba(44, 36, 36, 0.1);
+      --shadow-lg: 0 8px 32px rgba(44, 36, 36, 0.12);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+    /* ===== ADMIN LOGIN MODAL ===== */
+    .admin-login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 36, 36, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+    .admin-login-overlay.active { display: flex; }
+    .admin-login-box {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .admin-login-box .crown-icon { font-size: 48px; margin-bottom: 16px; }
+    .admin-login-box h2 { color: var(--rose-gold); margin-bottom: 8px; }
+    .admin-login-box p { color: var(--text-light); font-size: 14px; margin-bottom: 24px; }
+    .admin-login-box input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--medium-gray);
+      border-radius: var(--radius);
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 4px;
+      transition: border 0.3s;
+      margin-bottom: 16px;
+    }
+    .admin-login-box input:focus { outline: none; border-color: var(--rose-gold); }
+    .admin-login-box .error-msg { color: var(--danger); font-size: 13px; margin-bottom: 12px; display: none; }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--rose-gold);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--rose-gold-dark); transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--rose-gold);
+      border: 2px solid var(--rose-gold);
+    }
+    .btn-secondary:hover { background: var(--rose-gold); color: var(--white); }
+    .btn-whatsapp {
+      background: #25D366;
+      color: var(--white);
+    }
+    .btn-whatsapp:hover { background: #1EB854; transform: translateY(-1px); }
+    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn-danger:hover { background: #C62828; }
+    .btn-sm { padding: 8px 16px; font-size: 13px; }
+    .btn-block { width: 100%; }
+    .btn-icon { width: 40px; height: 40px; padding: 0; border-radius: 50%; }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--medium-gray);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .logo-crown { font-size: 28px; }
+    .logo-text h1 {
+      font-size: 22px;
+      color: var(--rose-gold);
+      line-height: 1.2;
+    }
+    .logo-text span {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .admin-link {
+      font-size: 12px;
+      color: var(--text-light);
+      cursor: pointer;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      transition: all 0.3s;
+    }
+    .admin-link:hover { background: var(--light-gray); color: var(--rose-gold); }
+
+    /* ===== MARQUEE ===== */
+    .marquee-bar {
+      background: var(--rose-gold);
+      color: var(--white);
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 25s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .hero-content { max-width: 700px; margin: 0 auto; }
+    .hero h2 {
+      font-size: 42px;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+    .hero h2 span { color: var(--rose-gold); }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-medium);
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--medium-gray);
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--rose-gold);
+      font-weight: 700;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===== SEARCH & FILTERS ===== */
+    .filters-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 16px;
+    }
+    .filters-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      border: 2px solid var(--medium-gray);
+      border-radius: var(--radius);
+      font-size: 15px;
+      background: var(--white);
+      transition: border 0.3s;
+    }
+    .search-box input:focus { outline: none; border-color: var(--rose-gold); }
+    .search-box .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 18px;
+    }
+    .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-tag {
+      padding: 10px 18px;
+      border: 2px solid var(--medium-gray);
+      border-radius: 30px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--white);
+      color: var(--text-medium);
+    }
+    .filter-tag:hover { border-color: var(--rose-gold); color: var(--rose-gold); }
+    .filter-tag.active {
+      background: var(--rose-gold);
+      color: var(--white);
+      border-color: var(--rose-gold);
+    }
+    .results-count {
+      padding: 12px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* ===== PRODUCT GRID ===== */
+    .catalog-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .product-image {
+      width: 100%;
+      height: 320px;
+      background: var(--light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-image .placeholder-icon {
+      font-size: 64px;
+      opacity: 0.3;
+    }
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      gap: 6px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-available {
+      background: rgba(76, 175, 80, 0.15);
+      color: var(--success);
+    }
+    .badge-new {
+      background: rgba(183, 110, 121, 0.15);
+      color: var(--rose-gold);
+    }
+    .badge-limited {
+      background: rgba(201, 169, 110, 0.15);
+      color: var(--crown-gold);
+    }
+    .product-info { padding: 20px; }
+    .product-brand {
+      font-size: 12px;
+      color: var(--rose-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .product-notes {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .product-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .product-size {
+      font-size: 13px;
+      color: var(--text-medium);
+      background: var(--light-gray);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .product-price {
+      text-align: right;
+    }
+    .price-current {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+    .price-installment {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-section {
+      background: var(--white);
+      padding: 60px 24px;
+    }
+    .how-section h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 40px;
+      color: var(--text-dark);
+    }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .step {
+      text-align: center;
+      padding: 24px;
+    }
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: var(--rose-gold);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 auto 16px;
+    }
+    .step h3 { font-size: 18px; margin-bottom: 8px; color: var(--text-dark); }
+    .step p { font-size: 14px; color: var(--text-light); }
+
+    /* ===== CTA FINAL ===== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-gold-dark) 100%);
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--white);
+    }
+    .cta-section h2 { font-size: 32px; margin-bottom: 12px; }
+    .cta-section p { font-size: 16px; opacity: 0.9; margin-bottom: 32px; }
+    .cta-section .btn {
+      background: var(--white);
+      color: var(--rose-gold);
+      font-weight: 600;
+    }
+    .cta-section .btn:hover { background: var(--off-white); }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--text-light);
+    }
+    .empty-state .empty-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
+    .empty-state h3 { font-size: 22px; color: var(--text-medium); margin-bottom: 8px; }
+    .empty-state p { font-size: 15px; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 48px 24px 24px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+    }
+    .footer-col h4 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: var(--rose-gold-light);
+    }
+    .footer-col p, .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ===== FLOATING WHATSAPP ===== */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+    }
+    .whatsapp-float a {
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+      text-decoration: none;
+      font-size: 32px;
+      transition: transform 0.3s;
+    }
+    .whatsapp-float a:hover { transform: scale(1.1); }
+
+    /* ===== ADMIN PANEL ===== */
+    .admin-panel {
+      display: none;
+      min-height: 100vh;
+      background: var(--light-gray);
+    }
+    .admin-panel.active { display: block; }
+    .consumer-view.hidden { display: none; }
+
+    .admin-header {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-header h2 { font-size: 20px; }
+    .admin-header h2 span { color: var(--rose-gold-light); }
+    .admin-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* Admin Stats */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .admin-stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .admin-stat-card .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--rose-gold);
+    }
+    .admin-stat-card .stat-label {
+      font-size: 12px;
+      color: var(--text-light);
+      text-transform: uppercase;
+    }
+
+    /* Admin Form */
+    .admin-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .admin-card h3 {
+      font-size: 20px;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-medium);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 12px 14px;
+      border: 2px solid var(--medium-gray);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: border 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--rose-gold);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    /* Photo Upload */
+    .photo-upload {
+      border: 2px dashed var(--medium-gray);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .photo-upload:hover { border-color: var(--rose-gold); }
+    .photo-upload.has-image { padding: 0; border-style: solid; }
+    .photo-upload img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: var(--radius);
+    }
+    .photo-upload .upload-placeholder {
+      color: var(--text-light);
+    }
+    .photo-upload .upload-placeholder .upload-icon { font-size: 36px; margin-bottom: 8px; }
+    .photo-upload input { display: none; }
+
+    /* Admin Product List */
+    .admin-product-list { display: flex; flex-direction: column; gap: 12px; }
+    .admin-product-item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+    }
+    .admin-product-item:hover { box-shadow: var(--shadow-md); }
+    .admin-product-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius);
+      background: var(--light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .admin-product-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .admin-product-thumb .thumb-placeholder { font-size: 24px; opacity: 0.3; }
+    .admin-product-info { flex: 1; }
+    .admin-product-info h4 { font-size: 16px; color: var(--text-dark); }
+    .admin-product-info p { font-size: 13px; color: var(--text-light); }
+    .admin-product-actions { display: flex; gap: 8px; align-items: center; }
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--medium-gray);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--white);
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--success); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+    /* Backup Buttons */
+    .backup-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 28px; }
+      .hero-stats { gap: 24px; }
+      .stat-number { font-size: 22px; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .header-inner { padding: 12px 16px; }
+      .logo-text h1 { font-size: 18px; }
+      .admin-product-item { flex-wrap: wrap; }
+      .admin-product-actions { width: 100%; justify-content: flex-end; }
+    }
+
+    /* ===== TRANSITIONS ===== */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="admin-login-overlay" id="adminLoginOverlay">
+    <div class="admin-login-box">
+      <div class="crown-icon">👑</div>
+      <h2>Área do Vendedor</h2>
+      <p>Digite a senha para acessar o painel</p>
+      <input type="password" id="adminPasswordInput" placeholder="••••••••" maxlength="20">
+      <p class="error-msg" id="loginError">Senha incorreta</p>
+      <button class="btn btn-primary btn-block" onclick="attemptLogin()">Entrar</button>
+      <br><br>
+      <button class="btn btn-secondary btn-block btn-sm" onclick="closeAdminLogin()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ===== CONSUMER VIEW ===== -->
+  <div class="consumer-view" id="consumerView">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <a href="#" class="logo" onclick="return false;">
+          <span class="logo-crown">👑</span>
+          <div class="logo-text">
+            <h1>Gringa Imports</h1>
+            <span>Perfumes Importados</span>
+          </div>
+        </a>
+        <div class="header-actions">
+          <a class="admin-link" onclick="openAdminLogin()">Área do Vendedor</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Marquee -->
+    <div class="marquee-bar">
+      <div class="marquee-content">
+        &nbsp;&nbsp;✦ 100% Originais &nbsp;&nbsp;·&nbsp;&nbsp; Envio para todo o Brasil &nbsp;&nbsp;·&nbsp;&nbsp; Parcele em até 3x sem juros &nbsp;&nbsp;·&nbsp;&nbsp; Atendimento via WhatsApp &nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;&nbsp; ✦ 100% Originais &nbsp;&nbsp;·&nbsp;&nbsp; Envio para todo o Brasil &nbsp;&nbsp;·&nbsp;&nbsp; Parcele em até 3x sem juros &nbsp;&nbsp;·&nbsp;&nbsp; Atendimento via WhatsApp &nbsp;&nbsp;✦
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content fade-in">
+        <h2>Perfumes que <span>contam sua história</span></h2>
+        <p>Descubra fragrâncias importadas Selection que despertam sentimentos e transformam momentos</p>
+        <div class="hero-cta">
+          <a href="https://wa.me/5565998154861?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20conhecer%20os%20perfumes%20dispon%C3%ADveis!" class="btn btn-whatsapp" target="_blank">
+            💬 Falar com Vendedor
+          </a>
+          <a href="#catalog" class="btn btn-secondary">
+            Ver Catálogo
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number" id="availableCount">0</div>
+            <div class="stat-label">Fragrâncias</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Originais</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3x</div>
+            <div class="stat-label">Sem Juros</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section" id="catalog">
+      <div class="filters-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Buscar por nome, marca ou notas olfativas...">
+        </div>
+        <div class="filter-tags">
+          <button class="filter-tag active" data-filter="all" onclick="filterProducts('all', this)">Todos</button>
+          <button class="filter-tag" data-filter="feminino" onclick="filterProducts('feminino', this)">Feminino</button>
+          <button class="filter-tag" data-filter="masculino" onclick="filterProducts('masculino', this)">Masculino</button>
+          <button class="filter-tag" data-filter="unissex" onclick="filterProducts('unissex', this)">Unissex</button>
+        </div>
+      </div>
+    </section>
+    <div class="results-count" id="resultsCount"></div>
+
+    <!-- Product Grid -->
+    <section class="catalog-section">
+      <div class="product-grid" id="productGrid"></div>
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">🧴</div>
+        <h3>Em breve, novidades</h3>
+        <p>O catálogo está sendo montado. Volte em breve!</p>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section">
+      <h2>Como Comprar</h2>
+      <div class="how-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Escolha</h3>
+          <p>Navegue pelo catálogo e encontre o perfume perfeito</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Converse</h3>
+          <p>Clique em "Consultar" e fale direto com o vendedor pelo WhatsApp</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Receba</h3>
+          <p>Combine pagamento e receba seu perfume em casa</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-section">
+      <h2>Não encontrou o que procura?</h2>
+      <p>A gente encontra para você! Consulte disponibilidade de qualquer perfume importado.</p>
+      <a href="https://wa.me/5565998154861?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20a%20disponibilidade%20de%20um%20perfume." class="btn" target="_blank">
+        💬 Encomendar Perfume
+      </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <h4>Gringa Imports</h4>
+          <p>Perfumes importados Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection Selection</p>
+        </div>
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <a href="https://wa.me/5565998154861" target="_blank">📱 WhatsApp: (65) 99815-4861</a>
+          <a href="https://www.instagram.com/gringaimports.oficial/" target="_blank">📸 Instagram: @gringaimports.oficial</a>
+        </div>
+        <div class="footer-col">
+          <h4>Horário</h4>
+          <p>Seg - Sáb: 9h às 20h</p>
+          <p>Dom: Horário comercial</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Gringa Imports. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ===== ADMIN PANEL ===== -->
+  <div class="admin-panel" id="adminPanel">
+
+    <div class="admin-header">
+      <h2>👑 <span>Gringa Imports</span> - Painel do Vendedor</h2>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#fff;" onclick="exportBackup()">📦 Exportar</button>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#fff;" onclick="document.getElementById('importFile').click()">📥 Importar</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+        <button class="btn btn-sm btn-secondary" onclick="logoutAdmin()">Sair</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Stats -->
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <div class="stat-value" id="adminTotalProducts">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-value" id="adminAvailableProducts">0</div>
+          <div class="stat-label">Ativos</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-value" id="adminInactiveProducts">0</div>
+          <div class="stat-label">Inativos</div>
+        </div>
+      </div>
+
+      <!-- Add/Edit Product Form -->
+      <div class="admin-card">
+        <h3 id="formTitle">➕ Novo Perfume</h3>
+        <form id="productForm" onsubmit="saveProduct(event)">
+          <input type="hidden" id="editId" value="">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nome do Perfume *</label>
+              <input type="text" id="pName" required placeholder="Ex: La Vie Est Belle">
+            </div>
+            <div class="form-group">
+              <label>Marca / Inspiração</label>
+              <input type="text" id="pBrand" placeholder="Ex: Inspiração Lancôme">
+            </div>
+            <div class="form-group">
+              <label>Categoria *</label>
+              <select id="pCategory" required>
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+                <option value="unissex">Unissex</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tamanho</label>
+              <input type="text" id="pSize" placeholder="Ex: 100ml">
+            </div>
+            <div class="form-group">
+              <label>Preço (R$) *</label>
+              <input type="number" id="pPrice" required step="0.01" min="0" placeholder="Ex: 189.90">
+            </div>
+            <div class="form-group">
+              <label>Parcelamento</label>
+              <input type="text" id="pInstallment" placeholder="Ex: 3x de R$ 63,30">
+            </div>
+            <div class="form-group full">
+              <label>Notas Olfativas</label>
+              <input type="text" id="pNotes" placeholder="Ex: Baunilha, Flor de Lótus, Patchouli">
+            </div>
+            <div class="form-group full">
+              <label>Etiqueta</label>
+              <select id="pTag">
+                <option value="">Nenhuma</option>
+                <option value="novidade">Novidade</option>
+                <option value="ultimas-unidades">Últimas unidades</option>
+                <option value="mais-vendido">Mais vendido</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Foto do Produto</label>
+              <div class="photo-upload" id="photoUpload" onclick="document.getElementById('photoInput').click()">
+                <div class="upload-placeholder" id="uploadPlaceholder">
+                  <div class="upload-icon">📷</div>
+                  <p>Clique ou arraste para adicionar uma foto</p>
+                  <p style="font-size:12px; margin-top:4px;">A imagem será comprimida automaticamente</p>
+                </div>
+                <img id="photoPreview" style="display:none;" alt="Preview">
+                <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:20px;">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Salvar Perfume</button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;" onclick="cancelEdit()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Product List -->
+      <div class="admin-card">
+        <h3>📋 Produtos Cadastrados</h3>
+        <div class="admin-product-list" id="adminProductList">
+          <div class="empty-state" id="adminEmptyState">
+            <div class="empty-icon">🧴</div>
+            <h3>Nenhum produto ainda</h3>
+            <p>Use o formulário acima para cadastrar seu primeiro perfume</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Floating WhatsApp -->
+  <div class="whatsapp-float" id="whatsappFloat">
+    <a href="https://wa.me/5565998154861?text=Ol%C3%A1!%20Vim%20pelo%20site%20Gringa%20Imports!" target="_blank" title="Falar no WhatsApp">
+      💬
+    </a>
+  </div>
+
+  <script>
+    // ===== CONFIG =====
+    const WHATSAPP_NUMBER = '5565998154861';
+    const ADMIN_PASSWORD = 'gringa2026';
+    const STORAGE_KEY = 'gringa_imports_products';
+
+    // ===== STATE =====
+    let products = [];
+    let currentFilter = 'all';
+    let currentPhotoData = null;
+    let isAdminLoggedIn = false;
+
+    // ===== INIT =====
+    function init() {
+      loadProducts();
+      renderConsumerProducts();
+      updateStats();
+    }
+
+    // ===== STORAGE =====
+    function loadProducts() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        products = data ? JSON.parse(data) : [];
+      } catch (e) {
+        products = [];
+      }
+    }
+
+    function saveProducts() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    }
+
+    // ===== CONSUMER RENDER =====
+    function renderConsumerProducts() {
+      const grid = document.getElementById('productGrid');
+      const emptyState = document.getElementById('emptyState');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      let filtered = products.filter(p => p.available);
+
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(p => p.category === currentFilter);
+      }
+
+      if (searchVal) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(searchVal) ||
+          (p.brand && p.brand.toLowerCase().includes(searchVal)) ||
+          (p.notes && p.notes.toLowerCase().includes(searchVal))
+        );
+      }
+
+      document.getElementById('resultsCount').textContent =
+        `${filtered.length} fragrância${filtered.length !== 1 ? 's' : ''} encontrada${filtered.length !== 1 ? 's' : ''}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      grid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+    }
+
+    function createProductCard(p) {
+      const installment = p.installment ? `<div class="price-installment">${p.installment}</div>` : '';
+      const notes = p.notes ? `<div class="product-notes">${p.notes}</div>` : '';
+
+      let badges = `<span class="badge badge-available">● Disponível</span>`;
+      if (p.tag === 'novidade') badges += `<span class="badge badge-new">Novidade</span>`;
+      if (p.tag === 'ultimas-unidades') badges += `<span class="badge badge-limited">Últimas unidades</span>`;
+      if (p.tag === 'mais-vendido') badges += `<span class="badge badge-new">Mais vendido</span>`;
+
+      const image = p.image
+        ? `<img src="${p.image}" alt="${p.name}">`
+        : `<div class="placeholder-icon">🧴</div>`;
+
+      const msg = encodeURIComponent(`Olá! Tenho interesse no perfume: ${p.name} (${p.size || ''}) - R$ ${p.price.toFixed(2)}`);
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+
+      return `
+        <div class="product-card fade-in">
+          <div class="product-image">
+            ${image}
+            <div class="product-badge">${badges}</div>
+          </div>
+          <div class="product-info">
+            <div class="product-brand">${p.brand || 'Importado'}</div>
+            <div class="product-name">${p.name}</div>
+            ${notes}
+            <div class="product-details">
+              <span class="product-size">${p.size || '-'}</span>
+              <div class="product-price">
+                <div class="price-current">R$ ${p.price.toFixed(2)}</div>
+                ${installment}
+              </div>
+            </div>
+            <a href="${whatsappUrl}" class="btn btn-whatsapp btn-block" target="_blank">
+              💬 Consultar
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterProducts(filter, el) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderConsumerProducts();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderConsumerProducts);
+
+    // ===== STATS =====
+    function updateStats() {
+      const available = products.filter(p => p.available).length;
+      document.getElementById('availableCount').textContent = available;
+      document.getElementById('adminTotalProducts').textContent = products.length;
+      document.getElementById('adminAvailableProducts').textContent = products.filter(p => p.available).length;
+      document.getElementById('adminInactiveProducts').textContent = products.filter(p => !p.available).length;
+    }
+
+    // ===== ADMIN =====
+    function openAdminLogin() {
+      document.getElementById('adminLoginOverlay').classList.add('active');
+      document.getElementById('adminPasswordInput').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('adminPasswordInput').focus();
+    }
+
+    function closeAdminLogin() {
+      document.getElementById('adminLoginOverlay').classList.remove('active');
+    }
+
+    function attemptLogin() {
+      const pass = document.getElementById('adminPasswordInput').value;
+      if (pass === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
+        closeAdminLogin();
+        document.getElementById('consumerView').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('active');
+        document.getElementById('whatsappFloat').style.display = 'none';
+        renderAdminList();
+        updateStats();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    document.getElementById('adminPasswordInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') attemptLogin();
+    });
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById('adminPanel').classList.remove('active');
+      document.getElementById('consumerView').classList.remove('hidden');
+      document.getElementById('whatsappFloat').style.display = 'block';
+      renderConsumerProducts();
+      updateStats();
+    }
+
+    // ===== PHOTO UPLOAD =====
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Compress image
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxSize = 600;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxSize || h > maxSize) {
+            if (w > h) { h = (h / w) * maxSize; w = maxSize; }
+            else { w = (w / h) * maxSize; h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          currentPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+
+          document.getElementById('photoPreview').src = currentPhotoData;
+          document.getElementById('photoPreview').style.display = 'block';
+          document.getElementById('uploadPlaceholder').style.display = 'none';
+          document.getElementById('photoUpload').classList.add('has-image');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ===== SAVE / EDIT =====
+    function saveProduct(event) {
+      event.preventDefault();
+
+      const editId = document.getElementById('editId').value;
+      const product = {
+        id: editId || Date.now().toString(),
+        name: document.getElementById('pName').value.trim(),
+        brand: document.getElementById('pBrand').value.trim(),
+        category: document.getElementById('pCategory').value,
+        size: document.getElementById('pSize').value.trim(),
+        price: parseFloat(document.getElementById('pPrice').value),
+        installment: document.getElementById('pInstallment').value.trim(),
+        notes: document.getElementById('pNotes').value.trim(),
+        tag: document.getElementById('pTag').value,
+        image: currentPhotoData || '',
+        available: true
+      };
+
+      if (editId) {
+        const idx = products.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          product.available = products[idx].available;
+          products[idx] = product;
+        }
+      } else {
+        products.push(product);
+      }
+
+      saveProducts();
+      resetForm();
+      renderAdminList();
+      updateStats();
+    }
+
+    function editProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if (!p) return;
+
+      document.getElementById('editId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pBrand').value = p.brand || '';
+      document.getElementById('pCategory').value = p.category;
+      document.getElementById('pSize').value = p.size || '';
+      document.getElementById('pPrice').value = p.price;
+      document.getElementById('pInstallment').value = p.installment || '';
+      document.getElementById('pNotes').value = p.notes || '';
+      document.getElementById('pTag').value = p.tag || '';
+
+      if (p.image) {
+        currentPhotoData = p.image;
+        document.getElementById('photoPreview').src = p.image;
+        document.getElementById('photoPreview').style.display = 'block';
+        document.getElementById('uploadPlaceholder').style.display = 'none';
+        document.getElementById('photoUpload').classList.add('has-image');
+      }
+
+      document.getElementById('formTitle').textContent = '✏️ Editar Perfume';
+      document.getElementById('saveBtn').textContent = 'Salvar Alterações';
+      document.getElementById('cancelBtn').style.display = 'inline-flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+      resetForm();
+    }
+
+    function resetForm() {
+      document.getElementById('productForm').reset();
+      document.getElementById('editId').value = '';
+      document.getElementById('formTitle').textContent = '➕ Novo Perfume';
+      document.getElementById('saveBtn').textContent = 'Salvar Perfume';
+      document.getElementById('cancelBtn').style.display = 'none';
+      currentPhotoData = null;
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('uploadPlaceholder').style.display = 'block';
+      document.getElementById('photoUpload').classList.remove('has-image');
+    }
+
+    function toggleAvailability(id) {
+      const p = products.find(prod => prod.id === id);
+      if (p) {
+        p.available = !p.available;
+        saveProducts();
+        renderAdminList();
+        updateStats();
+      }
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+      products = products.filter(p => p.id !== id);
+      saveProducts();
+      renderAdminList();
+      updateStats();
+    }
+
+    // ===== ADMIN LIST =====
+    function renderAdminList() {
+      const list = document.getElementById('adminProductList');
+      const empty = document.getElementById('adminEmptyState');
+
+      if (products.length === 0) {
+        list.innerHTML = '';
+        list.appendChild(empty);
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      list.innerHTML = products.map(p => {
+        const thumb = p.image
+          ? `<img src="${p.image}" alt="${p.name}">`
+          : `<span class="thumb-placeholder">🧴</span>`;
+
+        const catLabel = { feminino: 'Feminino', masculino: 'Masculino', unissex: 'Unissex' }[p.category] || p.category;
+
+        return `
+          <div class="admin-product-item">
+            <div class="admin-product-thumb">${thumb}</div>
+            <div class="admin-product-info">
+              <h4>${p.name}</h4>
+              <p>${p.brand || 'Sem marca'} · ${catLabel} · ${p.size || '-'} · R$ ${p.price.toFixed(2)}</p>
+            </div>
+            <div class="admin-product-actions">
+              <label class="toggle-switch" title="${p.available ? 'Ativo' : 'Inativo'}">
+                <input type="checkbox" ${p.available ? 'checked' : ''} onchange="toggleAvailability('${p.id}')">
+                <span class="toggle-slider"></span>
+              </label>
+              <button class="btn btn-sm btn-secondary" onclick="editProduct('${p.id}')" title="Editar">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')" title="Excluir">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ===== BACKUP =====
+    function exportBackup() {
+      const data = JSON.stringify(products, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `gringa-imports-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) throw new Error('Formato inválido');
+
+          if (confirm(`Importar ${imported.length} produto(s)? Isso substituirá o catálogo atual.`)) {
+            products = imported;
+            saveProducts();
+            renderAdminList();
+            renderConsumerProducts();
+            updateStats();
+            alert('Backup importado com sucesso!');
+          }
+        } catch (err) {
+          alert('Erro ao importar: arquivo inválido');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    // ===== DRAG & DROP =====
+    const photoUpload = document.getElementById('photoUpload');
+    photoUpload.addEventListener('dragover', (e) => { e.preventDefault(); photoUpload.style.borderColor = 'var(--rose-gold)'; });
+    photoUpload.addEventListener('dragleave', () => { photoUpload.style.borderColor = ''; });
+    photoUpload.addEventListener('drop', (e) => {
+      e.preventDefault();
+      photoUpload.style.borderColor = '';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        document.getElementById('photoInput').files = e.dataTransfer.files;
+        handlePhotoUpload({ target: { files: [file] } });
+      }
+    });
+
+    // ===== START =====
+    init();
+  </script>
+</body>
+</html>
