@@ -1,15 +1,16 @@
 # Gringa Imports - Catálogo de Perfumes
 
-Catálogo digital elegante para venda de perfumes importados.
+Catálogo digital elegante para venda de perfumes importados com dados salvos no Firebase Firestore.
 
 ## Funcionalidades
 
 ### Área do Consumidor
 - Catálogo de perfumes com filtro por categoria (Feminino / Masculino / Unissex)
 - Busca por nome, marca ou notas olfativas
-- CTAs de WhatsApp em todos os pontos
+- CTAs de WhatsApp em todos os pontos (abre com mensagem pré-formatada)
 - Layout responsivo (funciona no celular)
 - Botão flutuante de WhatsApp
+- Dados em tempo real (atualiza automaticamente)
 
 ### Área do Vendedor (Admin)
 - Painel protegido por senha
@@ -17,6 +18,13 @@ Catálogo digital elegante para venda de perfumes importados.
 - Ativar/desativar produtos
 - Editar e excluir produtos
 - Exportar/Importar backup (JSON)
+- **Dados salvos no Firebase** - acessíveis de qualquer dispositivo
+
+## Tecnologias
+
+- Firebase Firestore (banco de dados em tempo real)
+- HTML + CSS + JavaScript puro
+- Google Fonts (Playfair Display + Inter)
 
 ## Senha do Admin
 
@@ -27,18 +35,18 @@ Para alterar, edite a variável `ADMIN_PASSWORD` no código.
 ## Como Usar
 
 1. Acesse o site
-2. Clique em "Área do Vendedor" no topo
-3. Digite a senha
-4. Cadastre seus perfumes com nome, preço, foto e detalhes
-5. Os produtos aparecem automaticamente no catálogo
+2. Clique em **"Área do Vendedor"** no topo
+3. Digite a senha: `gringa2026`
+4. Cadastre seus perfumes (nome, preço, foto, etc.)
+5. Os produtos aparecem automaticamente no catálogo para os clientes
 
 ## Hospedagem (GitHub Pages)
 
 1. Crie um repositório no GitHub
 2. Faça push deste código
-3. Vá em Settings > Pages
+3. Vá em **Settings > Pages**
 4. Selecione a branch `main` e salve
-5. O site ficará disponível em `https://seu-usuario.github.io/nome-do-repo/`
+5. O site ficará em `https://seu-usuario.github.io/nome-do-repo/`
 
 ## Contato
 

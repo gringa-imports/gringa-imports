@@ -6,6 +6,8 @@
   <title>Gringa Imports - Perfumes Importados</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --rose-gold: #B76E79;
@@ -997,36 +999,48 @@
   </div>
 
   <script>
+    // ===== FIREBASE CONFIG =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyCS-9WsMoN5A6KSK6OlzzbVwCp8muY79hg",
+      authDomain: "gringa-imports.firebaseapp.com",
+      projectId: "gringa-imports",
+      storageBucket: "gringa-imports.firebasestorage.app",
+      messagingSenderId: "1022955239957",
+      appId: "1:1022955239957:web:0a5aea9eaf9443e86f2c1c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     // ===== CONFIG =====
     const WHATSAPP_NUMBER = '5565998154861';
     const ADMIN_PASSWORD = 'gringa2026';
-    const STORAGE_KEY = 'gringa_imports_products';
 
     // ===== STATE =====
     let products = [];
     let currentFilter = 'all';
     let currentPhotoData = null;
     let isAdminLoggedIn = false;
+    let unsubscribeListener = null;
 
     // ===== INIT =====
     function init() {
-      loadProducts();
-      renderConsumerProducts();
-      updateStats();
+      listenProducts();
     }
 
-    // ===== STORAGE =====
-    function loadProducts() {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        products = data ? JSON.parse(data) : [];
-      } catch (e) {
+    // ===== REALTIME FIRESTORE =====
+    function listenProducts() {
+      if (unsubscribeListener) unsubscribeListener();
+      unsubscribeListener = db.collection('products').orderBy('createdAt', 'asc').onSnapshot((snapshot) => {
+        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderConsumerProducts();
+        updateStats();
+        if (isAdminLoggedIn) renderAdminList();
+      }, (error) => {
+        console.error('Firestore error:', error);
         products = [];
-      }
-    }
-
-    function saveProducts() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+        renderConsumerProducts();
+        updateStats();
+      });
     }
 
     // ===== CONSUMER RENDER =====
@@ -1195,12 +1209,15 @@
     }
 
     // ===== SAVE / EDIT =====
-    function saveProduct(event) {
+    async function saveProduct(event) {
       event.preventDefault();
+      const btn = document.getElementById('saveBtn');
+      const originalText = btn.textContent;
+      btn.textContent = '⏳ Salvando...';
+      btn.disabled = true;
 
       const editId = document.getElementById('editId').value;
-      const product = {
-        id: editId || Date.now().toString(),
+      const productData = {
         name: document.getElementById('pName').value.trim(),
         brand: document.getElementById('pBrand').value.trim(),
         category: document.getElementById('pCategory').value,
@@ -1213,20 +1230,21 @@
         available: true
       };
 
-      if (editId) {
-        const idx = products.findIndex(p => p.id === editId);
-        if (idx !== -1) {
-          product.available = products[idx].available;
-          products[idx] = product;
+      try {
+        if (editId) {
+          productData.available = products.find(p => p.id === editId)?.available ?? true;
+          await db.collection('products').doc(editId).update(productData);
+        } else {
+          productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('products').add(productData);
         }
-      } else {
-        products.push(product);
+        resetForm();
+      } catch (error) {
+        alert('Erro ao salvar: ' + error.message);
+      } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
       }
-
-      saveProducts();
-      resetForm();
-      renderAdminList();
-      updateStats();
     }
 
     function editProduct(id) {
@@ -1273,22 +1291,24 @@
       document.getElementById('photoUpload').classList.remove('has-image');
     }
 
-    function toggleAvailability(id) {
+    async function toggleAvailability(id) {
       const p = products.find(prod => prod.id === id);
       if (p) {
-        p.available = !p.available;
-        saveProducts();
-        renderAdminList();
-        updateStats();
+        try {
+          await db.collection('products').doc(id).update({ available: !p.available });
+        } catch (error) {
+          alert('Erro ao atualizar: ' + error.message);
+        }
       }
     }
 
-    function deleteProduct(id) {
+    async function deleteProduct(id) {
       if (!confirm('Tem certeza que deseja excluir este produto?')) return;
-      products = products.filter(p => p.id !== id);
-      saveProducts();
-      renderAdminList();
-      updateStats();
+      try {
+        await db.collection('products').doc(id).delete();
+      } catch (error) {
+        alert('Erro ao excluir: ' + error.message);
+      }
     }
 
     // ===== ADMIN LIST =====
@@ -1343,26 +1363,45 @@
       URL.revokeObjectURL(url);
     }
 
-    function importBackup(event) {
+    async function importBackup(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         try {
           const imported = JSON.parse(e.target.result);
           if (!Array.isArray(imported)) throw new Error('Formato inválido');
 
-          if (confirm(`Importar ${imported.length} produto(s)? Isso substituirá o catálogo atual.`)) {
-            products = imported;
-            saveProducts();
-            renderAdminList();
-            renderConsumerProducts();
-            updateStats();
-            alert('Backup importado com sucesso!');
+          if (confirm(`Importar ${imported.length} produto(s) para o Firebase? Isso substituirá o catálogo atual.`)) {
+            // Delete all current products
+            const batch = db.batch();
+            const snapshot = await db.collection('products').get();
+            snapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+            // Add imported products
+            imported.forEach(p => {
+              const docRef = db.collection('products').doc();
+              batch.set(docRef, {
+                name: p.name,
+                brand: p.brand || '',
+                category: p.category || 'unissex',
+                size: p.size || '',
+                price: p.price || 0,
+                installment: p.installment || '',
+                notes: p.notes || '',
+                tag: p.tag || '',
+                image: p.image || '',
+                available: p.available !== false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            });
+
+            await batch.commit();
+            alert(`${imported.length} produto(s) importados com sucesso!`);
           }
         } catch (err) {
-          alert('Erro ao importar: arquivo inválido');
+          alert('Erro ao importar: ' + err.message);
         }
       };
       reader.readAsText(file);
